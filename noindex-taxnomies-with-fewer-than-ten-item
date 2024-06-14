@@ -1,0 +1,19 @@
+automatically noindex product categories and the “model” taxonomy pages with fewer than 10 products:
+
+
+add_filter( 'rank_math/frontend/robots', function( $robots ) {
+  if ( is_tax('product_cat') || is_tax('model') ) {
+    $term = get_queried_object();
+    $term_count = $term->count;
+
+    if ( $term_count < 10 ) {
+      $robots['index'] = 'noindex';
+      $robots['follow'] = 'nofollow';
+    } else {
+      $robots['index'] = 'index';
+      $robots['follow'] = 'follow';
+    }
+  }
+
+  return $robots;
+});
