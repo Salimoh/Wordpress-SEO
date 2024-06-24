@@ -1,0 +1,6 @@
+add_filter( 'rank_math/sitemap/entry', function( $url, $type, $object ){
+	if($type == 'post' && $object->post_type == 'product' && get_post_meta($object->ID, '_stock_status', true) == 'outofstock') {
+		return '';
+	}
+	return $url;
+}, 10, 3 );
