@@ -1,0 +1,12 @@
+you may also use and customize this filter on your site to remove the archive on breadcrumbs:
+
+
+add_filter( 'rank_math/frontend/breadcrumb/items', function( $crumbs, $class ) {
+    // Check if we are viewing a single custom post type
+    if ( is_singular('case') ) {
+        unset( $crumbs[1] ); // Unset elements with key 1
+        $crumbs = array_values( $crumbs );
+        return $crumbs;
+    }
+    return $crumbs;
+}, 10, 2);
