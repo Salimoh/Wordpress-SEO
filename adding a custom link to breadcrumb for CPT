@@ -1,0 +1,16 @@
+adding a custom link to breadcrumb for CPT
+
+
+
+add_filter( 'rank_math/frontend/breadcrumb/items', function( $crumbs, $class ) {
+     $parent = ['ABC',
+		 'https://www.nardebangroup.com/portfolio/'
+		];
+    // Check if we are viewing a single custom post type
+    if ( is_singular('case') ) {
+       
+        array_splice( $crumbs, 1, 0, array($parent) );
+        return $crumbs;
+    }
+    return $crumbs;
+}, 10, 2);
