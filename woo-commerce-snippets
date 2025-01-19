@@ -1,0 +1,112 @@
+/**
+ * @snippet       Hide Clear Link | WooCommerce Variable Products
+ * @how-to        businessbloomer.com/woocommerce-customization
+ * @author        Rodolfo Melogli, Business Bloomer
+ * @compatible    WooCommerce 6
+ * @community     https://businessbloomer.com/club/
+ */
+ 
+add_filter( 'woocommerce_reset_variations_link', '__return_empty_string', 9999 );
+
+
+
+/**
+* @snippet       Remove "added to your cart" message
+* @how-to        Get CustomizeWoo.com FREE
+* @author        Rodolfo Melogli
+* @compatible    WooCommerce 5
+* @community     https://businessbloomer.com/club/
+*/
+ 
+add_filter( 'wc_add_to_cart_message_html', '__return_null' );
+
+
+/**
+ * @snippet       Disable out of stock variations @ WooCommerce Single
+ * @how-to        businessbloomer.com/woocommerce-customization
+ * @author        Rodolfo Melogli, Business Bloomer
+ * @compatible    WooCommerce 8
+ * @community     https://businessbloomer.com/club/
+ */
+ 
+add_filter( 'woocommerce_variation_is_active', 'bbloomer_grey_out_variations_out_of_stock', 10, 2 );
+ 
+function bbloomer_grey_out_variations_out_of_stock( $is_active, $variation ) {
+    if ( ! $variation->is_in_stock() ) return false;
+    return $is_active;
+}
+
+/**
+ * @snippet       Hide Clear Link | WooCommerce Variable Products
+ * @how-to        businessbloomer.com/woocommerce-customization
+ * @author        Rodolfo Melogli, Business Bloomer
+ * @compatible    WooCommerce 6
+ * @community     https://businessbloomer.com/club/
+ */
+ 
+add_filter( 'woocommerce_reset_variations_link', '__return_empty_string', 9999 );
+
+
+/**
+ * @snippet       Dynamic Attributes @ Single Product that change description according to selected variable
+ * @how-to        businessbloomer.com/woocommerce-customization
+ * @author        Rodolfo Melogli, Business Bloomer
+ * @testedwith    WooCommerce 6
+ * @community     https://businessbloomer.com/club/
+ */
+ 
+add_action( 'woocommerce_before_add_to_cart_quantity', 'bbloomer_dynamic_atts_variation' );
+  
+function bbloomer_dynamic_atts_variation() {
+   global $product;
+   if ( ! $product->is_type( 'variable' ) ) return;
+    wc_enqueue_js( " 
+      $('input.variation_id').change(function(){
+         if( $(this).val() && $(this).val() > 0  ) {   
+            $('form.variations_form').find('.variations select').each( function( index, el ){
+               var current_select_id = $(el).attr('id');
+               var current_select_val = $(el).find('option:selected').text();
+               $('.woocommerce-product-attributes-item--attribute_'+current_select_id+' td p').text(current_select_val);
+            });
+         } 
+      });
+   " );
+}
+
+
+/**
+ * @snippet       Hide "View Cart" @ Woo Shop Page
+ * @tutorial      Get CustomizeWoo.com FREE
+ * @author        Rodolfo Melogli, Business Bloomer
+ * @compatible    WooCommerce 8
+ * @community     Join https://businessbloomer.com/club/
+ */
+ 
+add_action( 'wp_footer', 'bbloomer_no_ajax_view_cart_button' );
+    
+function bbloomer_no_ajax_view_cart_button() {
+   wc_enqueue_js( "
+      $( document.body ).on('wc_cart_button_updated', function(){
+         $('.added_to_cart.wc-forward').remove();
+      });   
+   " );
+}
+
+
+
+/**
+ * @snippet       Add HTML to Shipping Rate Label @ WooCommerce Cart & Checkout
+ * @how-to        businessbloomer.com/woocommerce-customization
+ * @author        Rodolfo Melogli, Business Bloomer
+ * @compatible    WooCommerce 9
+ * @community     https://businessbloomer.com/club/
+ */
+ 
+add_filter( 'woocommerce_cart_shipping_method_full_label', 'bbloomer_shipping_method_suffix', 9999, 2 );
+ 
+function bbloomer_shipping_method_suffix( $label, $method ) {
+   return $label . ' (<a href="#">اطلاعات بیشتر</a>)';
+}
+
+
+
